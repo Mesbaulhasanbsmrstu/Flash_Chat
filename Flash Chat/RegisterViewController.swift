@@ -33,7 +33,9 @@ class RegisterViewController: UIViewController {
         
         Auth.auth().createUser(withEmail: emailTextfield.text!, password: passwordTextfield.text!) { (User, error) in
             if error != nil{
-                print(error!)
+                let alert = UIAlertController(title: "Error!", message:"Invalid email or password.", preferredStyle: .alert)
+                             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                             self.present(alert,animated: true,completion: nil)
             }
                 else  {
                     print("successfully registration")

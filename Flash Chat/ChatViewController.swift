@@ -1,15 +1,12 @@
-//
-//  ViewController.swift
-//  Flash Chat
-//
-//  Created by Angela Yu on 29/08/2015.
-//  Copyright (c) 2015 London App Brewery. All rights reserved.
-//
 
 import UIKit
+import Firebase
 
-
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    
+    
+ 
+    
     
     // Declare instance variables here
 
@@ -27,19 +24,23 @@ class ChatViewController: UIViewController {
         
         //TODO: Set yourself as the delegate and datasource here:
         
-        
+        messageTableView.delegate = self
+        messageTableView.dataSource = self
         
         //TODO: Set yourself as the delegate of the text field here:
 
-        
+        messageTextfield.delegate = self
         
         //TODO: Set the tapGesture here:
-        
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTapped))
+        messageTableView.addGestureRecognizer(tapgesture)
         
 
         //TODO: Register your MessageCell.xib file here:
 
-        
+        messageTableView.register(UINib(nibName: "MessageCell", bundle: nil), forCellReuseIdentifier: "customMessageCell")
+        messageTableView.rowHeight = UITableView.automaticDimension
+         messageTableView.estimatedRowHeight = 220.0
     }
 
     ///////////////////////////////////////////
@@ -50,18 +51,30 @@ class ChatViewController: UIViewController {
     
     //TODO: Declare cellForRowAtIndexPath here:
     
-    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customMessageCell", for: indexPath) as! CustomMessageCell
+        let messagearray = ["First message","Second message","Third message"]
+        cell.messageBody.text = messagearray[indexPath.row]
+        return cell
+    }
     
     //TODO: Declare numberOfRowsInSection here:
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
     
-    
+
+   
     //TODO: Declare tableViewTapped here:
-    
+    @objc func tableViewTapped()
+    {
+        messageTextfield.endEditing(true)
+    }
     
     
     //TODO: Declare configureTableView here:
-    
+
     
     
     ///////////////////////////////////////////
@@ -74,11 +87,23 @@ class ChatViewController: UIViewController {
     //TODO: Declare textFieldDidBeginEditing here:
     
     
-    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+       
+        UIView.animate(withDuration: 0.5) {
+            self.heightConstraint.constant = 308
+            self.view.layoutIfNeeded()
+        }
+        
+    }
     
     //TODO: Declare textFieldDidEndEditing here:
     
-
+ func textFieldDidEndEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.5) {
+                   self.heightConstraint.constant = 50
+                   self.view.layoutIfNeeded()
+               }
+    }
     
     ///////////////////////////////////////////
     
@@ -105,10 +130,17 @@ class ChatViewController: UIViewController {
     
     
     @IBAction func logOutPressed(_ sender: AnyObject) {
+        do
+        {
+            
+        try Auth.auth().signOut()
         
-        //TODO: Log out the user and send them back to WelcomeViewController
+        navigationController!.popToRootViewController(animated: true)
         
-        
+        }
+        catch{
+            print("error: there was a problem logging out")
+        }
     }
     
 

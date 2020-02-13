@@ -146,7 +146,6 @@
 				8DCE705F56C9D59CD65914E7 /* Pods-Flash Chat.debug.xcconfig */,
 				C0749182BAD6555B8423C04A /* Pods-Flash Chat.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
